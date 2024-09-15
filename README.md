@@ -1,6 +1,6 @@
 # Project
 
-This project is the simulation of the heat transfer
+This project is the simulation of the heat transfer in one dimension
 
 ## Getting started
 
