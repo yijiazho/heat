@@ -35,6 +35,10 @@ class ThomasAlgorithm:
         """
         n = len(r)
         x = np.zeros(n)
+        f = np.copy(f)
+        g = np.copy(g)
+        e = np.copy(e)
+        r = np.copy(r)
         
         for i in range(1, n):
             e[i - 1] /= f[i - 1]
