@@ -1,7 +1,10 @@
 import numpy as np
 from matplotlib import pyplot
 
-length = 2
+from utility.visulization_1d import Visualization
+
+# hyperparameters
+
 # Thermal conductivity, in W / (m K)
 # air = 0.026
 # water = 0.592
@@ -9,28 +12,27 @@ length = 2
 # copper = 384.1
 # aluminum alloy = 126.4
 # iron = 80
-k = 100
+k = 80
+length = 2
 temp_left = 200
 temp_right = 200
-
 total_time = 0.5
-
 dx = .1
+dt = .00001
+# --------------------
+
+# initialization
 x_size = int(length / dx)
 x_vec = np.linspace(0, length, x_size)
-
-dt = .00001
 t_size = int(total_time/dt)
 t_vec = np.linspace(0, total_time, t_size)
-
 u = np.zeros([t_size, x_size])
-
 r = k * dt / (dx * dx)
-time_points = [0, 0.0005,  0.001, 0.002, 0.004, 0.005]
 
-print(r)
+print(f"check stability, r = {r}")
 #CFL condition to check stability
 if r <= 0.5:
+    
     u[:, 0] = temp_left
     u[:, -1] = temp_right
 
@@ -41,27 +43,13 @@ if r <= 0.5:
     pyplot.ylim([y_min, y_max])
     pyplot.xlim([x_min, x_max])
 
-    for t in range(len(t_vec) - 1):
+    for t in range(t_size - 1):
         for x in range(1, len(x_vec) - 1):
             u[t + 1, x] = r * (u[t, x + 1] - 2 * u[t, x] + u[t, x - 1]) + u[t, x]
 
-        # pyplot.plot(x_vec, u[t], 'blue')
-        # pyplot.pause(.0001)
-        # pyplot.cla()
-        # pyplot.ylim([y_min, y_max])
-        # pyplot.xlim([x_min, x_max])
-        # print(f"t={t * dt}")
+time_points = np.linspace(0, 0.015, 6)
+Visualization.plot_by_time(u, x_vec, dt, time_points, 3)
 
-
-    # Plot temperature distribution at specific times on the same graph
-    for time in time_points:
-        time_index = int(time / dt)
-        pyplot.plot(x_vec, u[time_index], label=f't = {time:.1f} s')
-    
-    pyplot.ylabel("Temperature (C˚)")
-    pyplot.xlabel("Distance Along Rod (m)")
-    pyplot.ylim([y_min, y_max])
-    pyplot.xlim([x_min, x_max])
-    pyplot.legend()
-    pyplot.show()
-    
+y_min = np.min(u)
+y_max = np.max(u)
+Visualization.plot_real_time(u, x_vec, t_vec, dt, y_min, y_max)

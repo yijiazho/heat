@@ -23,3 +23,9 @@ u = np.zeros([len(t_vec), len(x_vec)])
 r = k * dt / (dx * dx)
 print(r)
 
+u[:, 0] = temp_left
+u[:, -1] = temp_right
+
+for t in range(len(t_vec) - 1):
+    for x in range(1, len(x_vec) - 1):
+        u[t + 1, x] = r * (dt / dx**2) * (u[t, x + 1] - 2 * u[t, x] + u[t, x - 1]) + u[t, x]
