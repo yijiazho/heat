@@ -15,7 +15,7 @@ r = Constants.K * Constants.DT / (Constants.DX * Constants.DX)
 print(f"check stability, r = {r}")
 #CFL condition to check stability
 if r <= 0.5:
-    
+
     u[:, 0] = Constants.TEMP_LEFT
     u[:, -1] = Constants.TEMP_RIGHT
 
