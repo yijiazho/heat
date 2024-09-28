@@ -15,7 +15,7 @@ $$
 
 
 ### Explicit Method
-In explicit method we have
+In the explicit method, we approximate the time derivative as
 $$
 k \frac{\partial^2 u}{\partial x^2}
 \approx
@@ -57,7 +57,11 @@ $$
 $$
 and can be solved by substitution
 
-This methods is not guaranteed to be stable, it has to follow CFL condition
+This methods is not guaranteed to be stable, it has to follow **CFL condition** 
+$$r 
+\leq \frac{1}{2}
+$$ 
+This limits the time step $ \Delta t $ based on $ \Delta x $
 
 ### Implicit Method
 In implicit method we have
@@ -104,7 +108,7 @@ This is unconditionally stable, and more computational expensive, but this speci
 
 ### Crank Nicolson Method
 
-In Crank-Nicolson Method we have
+The Crank-Nicolson method is a semi-implicit scheme that averages the explicit and implicit methods, leading to second-order accuracy in both time and space. The heat equation is discretized as:
 $$
 k \frac{\partial^2 u}{\partial x^2}
 \approx
@@ -154,13 +158,80 @@ u ^ {n + 1} = A_2 ^ {-1} A_1 u ^{n}
 $$
 This is also unconditionally stable and more precise, but the time complexity is higher.
 
+### Summary of 1-D Methods
+- **Explicit Method**: Simple but conditionally stable, requiring small time steps to maintain stability.
+- **Implicit Method**: Unconditionally stable, simple because we can use Thomas Algorithm to sovle.
+- **Crank-Nicolson Method**: Unconditionally stable and more accurate than the implicit method, but computationally more expensive.
+
 ## 2-D Heat Equation
 $$
 \frac{\partial u}{\partial t} = k (\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2})
 $$
 
-Similarly, we can solve with similar problems
+Similarly, we can solve with different strategies
 
+
+### Explicit Method
+In the explicit method, we approximate the time derivative using a forward difference and the spatial derivatives using central differences.
+$$
+\frac{\partial u}{\partial t} \approx \frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t}
+$$
+and the second-order spatial derivatives:
+$$
+\frac{\partial^2 u}{\partial x^2} \approx \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2}
+$$
+$$
+\frac{\partial^2 u}{\partial y^2} \approx \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2}
 $$
 
+Thus, the heat equation becomes:
 $$
+\frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t} = k \left( \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2} + \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2} \right)
+$$
+
+Rearranging we have
+$$
+u_{i,j}^{n+1} = u_{i,j}^n + r_x (u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n) + r_y (u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n)
+$$
+where
+$$
+r_x = \frac{k \Delta t}{(\Delta x)^2}, \quad r_y = \frac{k \Delta t}{(\Delta y)^2}
+$$
+
+This method is straightforward to implement, but to maintain stability, it must satisfy the **CFL condition**:
+$$
+r_x + r_y \leq \frac{1}{2}
+$$
+
+### Implicit Method
+In the implicit method, the equation becomes:
+$$
+\frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t} = k \left( \frac{u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}}{(\Delta x)^2} + \frac{u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1}}{(\Delta y)^2} \right)
+$$
+
+This can be rearranged to form a linear system:
+$$
+u_{i,j}^n = u_{i,j}^{n+1} - r_x (u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}) - r_y (u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1})
+$$
+
+This results in a sparse system of linear equations that can be solved at each time step. The implicit method is **unconditionally stable**. However, solving this linear system is computationally expensive than explicit method.
+
+### Crank-Nicolson Method
+We have
+$$
+\frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t} = \frac{k}{2} \left( \left[ \frac{u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}}{(\Delta x)^2} + \frac{u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1}}{(\Delta y)^2} \right] \right.
+$$
+$$
++ \left[ \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2} + \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2} \right] \right)
+$$
+
+This can be written in matrix form:
+$$
+A_1 u^{n+1} = A_2 u^n
+$$
+This system is more accurate and unconditionally stable. However, it's even more **unconditionally stable** than the implicit method.
+
+### Summary of 2-D Methods
+- **Explicit Method**: Simple but conditionally stable, requiring small time steps to maintain stability.
+- **Implicit Method**: Unconditionally stable, but requires solving a linear system at each time step.
+- **Crank-Nicolson Method**: Unconditionally stable and more accurate than the implicit method, but computationally more expensive.
