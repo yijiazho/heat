@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot
 
 from constants import Constants
-from utility.visulization_1d import Visualization
+from utility.visulization import Visualization
 
 # initialization
 x_size = int(Constants.LENGTH / Constants.DX)

@@ -3,7 +3,7 @@ from matplotlib import pyplot
 
 from utility.matrix import MatrixUtils
 from constants import Constants
-from utility.visulization_1d import Visualization
+from utility.visulization import Visualization
 
 # Crank-Nicolson method guaranteed to be stable
 

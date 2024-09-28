@@ -14,4 +14,5 @@ class Constants:
     TEMP_RIGHT = 200
     TOTAL_TIME = 0.5
     DX = .1
+    DY = .1
     DT = .00001
