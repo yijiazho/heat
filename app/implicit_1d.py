@@ -34,7 +34,7 @@ for t in range(1, t_size - 1):
     u[t, -1] = Constants.TEMP_RIGHT
 
 time_points = np.linspace(0, 0.015, 6)
-Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, precision=3)
+Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, precision=3, file_name="app/plot/implicit_1d")
 
 y_min = np.min(u)
 y_max = np.max(u)

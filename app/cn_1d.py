@@ -45,7 +45,7 @@ for t in range(t_size - 1):
     u[t + 1, -1] = Constants.TEMP_RIGHT
             
 time_points = np.linspace(0, 0.015, 6)
-Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, 3)
+Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, 3, file_name="app/plot/cd_1d")
 
 y_min = np.min(u)
 y_max = np.max(u)

@@ -35,7 +35,7 @@ class Visualization:
         pyplot.ylim([y_min, y_max])
         pyplot.show()
                 
-    def plot_by_time(u, x_vec, dt, time_points, precision=2):
+    def plot_by_time(u, x_vec, dt, time_points, precision=2, file_name=None):
         """
         Plots the temperature distribution at specific times on the same graph.
         
@@ -50,6 +50,8 @@ class Visualization:
             Specific times (in seconds) at which to plot the temperature distribution.
         precision: integer
             Numer of digits taken in time in the legend
+        file_name : str or None
+            File name to save the figure (optional). If None, the figure is not saved.
         """
         
         for time in time_points:
@@ -60,6 +62,9 @@ class Visualization:
         pyplot.xlabel("Distance Along Rod (m)")
         pyplot.ylim([np.min(u), np.max(u)])
         pyplot.legend()
+        
+        if file_name:
+            pyplot.savefig(file_name, dpi=300, bbox_inches='tight')
         pyplot.show()
         
     @staticmethod
@@ -89,8 +94,48 @@ class Visualization:
             pyplot.xlabel("Y Position (m)")
             pyplot.ylabel("X Position (m)")
             pyplot.title(f"Temperature Distribution at t = {t*dt:.{precision}f} seconds")
-            pyplot.pause(0.01)  # Pause to create the dynamic effect
-            pyplot.clf()  # Clear the figure to update the next heatmap
+            pyplot.pause(0.01)
+            pyplot.clf()
+        
+        pyplot.show()
+        
+    @staticmethod
+    def static_heatmap(u, x_vec, y_vec, time_index, dt, precision=2, cmap='hot', file_name=None):
+        """
+        Display and optionally save a static heatmap of the temperature distribution at a specific time step.
+
+        Parameters:
+        u : 3D numpy array
+            Temperature distribution over time, x, and y.
+        x_vec : 1D numpy array
+            Spatial positions along the x-axis.
+        y_vec : 1D numpy array
+            Spatial positions along the y-axis.
+        time_index : int
+            The index of the time step to display.
+        dt : float
+            Time step size.
+        precision : int
+            Decimal precision for the displayed time in the title (default is 2).
+        cmap : str
+            Colormap for the heatmap (default is 'hot').
+        file_name : str or None
+            File name to save the figure (optional). If None, the figure is not saved.
+        """
+        pyplot.figure(figsize=(8, 6))
+
+        # Plot the heatmap for the selected time step
+        heatmap = pyplot.imshow(u[time_index, :, :], extent=[x_vec.min(), x_vec.max(), y_vec.min(), y_vec.max()],
+                                origin='lower', cmap=cmap, aspect='auto', vmin=np.min(u), vmax=np.max(u))
+        
+        # Add colorbar and labels
+        pyplot.colorbar(heatmap, label="Temperature (C°)")
+        pyplot.xlabel("Y Position (m)")
+        pyplot.ylabel("X Position (m)")
+        pyplot.title(f"Temperature Distribution at t = {time_index * dt:.{precision}f} seconds")
+
+        if file_name:
+            pyplot.savefig(file_name, dpi=300, bbox_inches='tight')
         
         pyplot.show()
         

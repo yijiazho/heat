@@ -2,38 +2,8 @@ from matplotlib import pyplot
 import numpy as np
 from utility.visulization import Visualization
 from constants import Constants
-
-def gauss_seidel(u, b, r_x, r_y, max_iter=1000, tol=1e-6):
-    """
-    Gauss-Seidel method to solve the implicit 2D heat equation.
-    
-    Parameters:
-    u : 2D numpy array
-        Current temperature distribution.
-    b : 2D numpy array
-        Right-hand side of the system (previous time step).
-    r_x, r_y : float
-        Discretization parameters in x and y directions.
-    max_iter : int
-        Maximum number of iterations.
-    tol : float
-        Tolerance for convergence.
-        
-    Returns:
-    u : 2D numpy array
-        Updated temperature distribution after solving the linear system.
-    """
-    for iteration in range(max_iter):
-        u_old = u.copy()  # Store the old solution to check for convergence
-        for x in range(1, u.shape[0] - 1):
-            for y in range(1, u.shape[1] - 1):
-                u[x, y] = (r_x * (u[x + 1, y] + u[x - 1, y]) +
-                           r_y * (u[x, y + 1] + u[x, y - 1]) + b[x, y]) / (1 + 2 * (r_x + r_y))
-        
-        # Check for convergence
-        if np.linalg.norm(u - u_old) < tol:
-            break
-    return u
+from scipy.sparse import lil_matrix
+from scipy.sparse.linalg import spsolve
 
 # initialization
 
@@ -49,23 +19,56 @@ u = np.zeros([t_size, x_size, y_size])
 r_x = Constants.K * Constants.DT / (Constants.DX * Constants.DX)
 r_y = Constants.K * Constants.DT / (Constants.DY * Constants.DY)
 
-print(f"check stability, r_x = {r_x}, r_y = {r_y}")
+def build_sparse_matrix(): 
+    N = x_size * y_size
+    A = lil_matrix((N, N))
+    
+    # the diagonal value
+    d = 1 + 2 * r_x + 2 * r_y
+    
+    # Loop over the grid points to construct the matrix
+    for i in range(x_size):
+        for j in range(y_size):
+            k = j * x_size + i           
+            A[k, k] = d
+            
+            # Set left and right neighbors
+            if i > 0:
+                A[k, k - 1] = -r_x
+            if i < x_size - 1:
+                A[k, k + 1] = -r_x
+            
+            # Set up and down neighbors
+            if j > 0:
+                A[k, k - x_size] = -r_y
+            if j < y_size - 1:
+                A[k, k + x_size] = -r_y
+
+    return A
 
 # Boundary conditions
-u[:, 0, :] = Constants.TEMP_LEFT  # Left boundary
-u[:, -1, :] = Constants.TEMP_RIGHT  # Right boundary
+u[:, 0, :] = Constants.TEMP_LEFT
+u[:, -1, :] = Constants.TEMP_RIGHT
+u[:, :, 0] = Constants.TEMP_LEFT
+
+A = build_sparse_matrix().tocsc()
 
 # Start time loop
 for t in range(1, t_size):
-    # Right-hand side of the equation (previous time step)
-    b = u[t - 1, :, :]
-    
-    # Solve using Gauss-Seidel method
-    u[t, :, :] = gauss_seidel(u[t - 1, :, :], b, r_x, r_y)
+    u_flattened_n = u[t - 1].flatten()
+    b = u_flattened_n.copy()
 
-    # Boundary conditions after each time step
-    u[t, :, 0] = Constants.TEMP_LEFT  # Left boundary
-    u[t, :, -1] = u[t, :, -2]  # Right boundary (insulated)
+    u_flattened_n1 = spsolve(A, b)
+    
+    # Reshape the flattened solution back into a 2D array
+    u[t] = u_flattened_n1.reshape((x_size, y_size))
+
+    # Re-apply boundary conditions
+    u[t, 0, :] = Constants.TEMP_LEFT
+    u[t, -1, :] = Constants.TEMP_RIGHT
+    u[t, :, 0] = Constants.TEMP_LEFT
 
 # visualization
+Visualization.static_heatmap(u, x_vec, y_vec, 100, Constants.DT, precision=4, file_name="app/plot/implicit_2d")
 Visualization.dynamic_heatmap(u, x_vec, y_vec, t_vec, Constants.DT, precision=4)
+# Time complexity O(t_size * (x_size * y_size)^ 1.5) because the sparse matrix solver is O(N ^ {3/2})

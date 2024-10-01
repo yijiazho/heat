@@ -1,5 +1,10 @@
-# Summary
-I would like to write paper about the heat equation
+# Project Title
+The numerical solution of 1-D and 2-D heat equation
+
+# Statement
+This project aim to compare some common numerical solutions to solve 1-D and 2-D heat equation with proper boundary conditions, covering Explicit method, implicit method and Crank-Nicolson method.
+
+# Solution
 
 ## 1-D heat Equation
 $$
@@ -9,7 +14,7 @@ $$
 Can be solved numerically by substituting derivative with delta where
 $$
 \frac{\partial u}{\partial t} 
-\approx
+=
 \frac{u^{n + 1}_{i} - u^{n}_{i}}{\Delta t} 
 $$
 
@@ -18,13 +23,13 @@ $$
 In the explicit method, we approximate the time derivative as
 $$
 k \frac{\partial^2 u}{\partial x^2}
-\approx
+=
 k \frac{u^{n}_{i + 1} - 2u^{n}_{i} + u ^{n}_{i - 1}}{(\Delta x)^2}
 $$
 So the original function becomes
 $$
 \frac{u^{n + 1}_{i} - u^{n}_{i}}{\Delta t} 
-\approx 
+=
 k \frac{u^{n}_{i + 1} - 2u^{n}_{i} + u ^{n}_{i - 1}}{(\Delta x)^2}
 $$
 
@@ -67,13 +72,13 @@ This limits the time step $ \Delta t $ based on $ \Delta x $
 In implicit method we have
 $$
 k \frac{\partial^2 u}{\partial x^2}
-\approx
+=
 k \frac{u^{n + 1}_{i + 1} - 2u^{n + 1}_{i} + u ^{n + 1}_{i - 1}}{(\Delta x)^2}
 $$
 So the original function becomes
 $$
 \frac{u^{n + 1}_{i} - u^{n}_{i}}{\Delta t} 
-\approx 
+=
 k \frac{u^{n + 1}_{i + 1} - 2u^{n + 1}_{i} + u ^{n + 1}_{i - 1}}{(\Delta x)^2}
 $$
 
@@ -98,7 +103,7 @@ $$
     1+2r & -r & 0 & \cdots & 0 \\
     -r & 1+2r & -r & \cdots & 0 \\
     0 & -r & 1+2r & \cdots & 0 \\
-    \vdots & \vdots & \vdots & \ddots & 0 \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
     0 & 0 & 0 & -r & 1+2r \\
   \end{array} } \right]
 $$
@@ -111,7 +116,7 @@ This is unconditionally stable, and more computational expensive, but this speci
 The Crank-Nicolson method is a semi-implicit scheme that averages the explicit and implicit methods, leading to second-order accuracy in both time and space. The heat equation is discretized as:
 $$
 k \frac{\partial^2 u}{\partial x^2}
-\approx
+=
 \frac{1}{2}k 
 \frac{(u^{n + 1}_{i + 1} - 2u^{n + 1}_{i} + u ^{n + 1}_{i - 1}) + (u^{n}_{i + 1} - 2u^{n}_{i} + u ^{n}_{i - 1})}{(\Delta x)^2}
 $$
@@ -119,7 +124,7 @@ $$
 The original function becomes
 $$
 \frac{u^{n + 1}_{i} - u^{n}_{i}}{\Delta t} 
-\approx 
+=
 \frac{1}{2}k 
 \frac{(u^{n + 1}_{i + 1} - 2u^{n + 1}_{i} + u ^{n + 1}_{i - 1}) + (u^{n}_{i + 1} - 2u^{n}_{i} + u ^{n}_{i - 1})}{(\Delta x)^2}
 $$
@@ -154,7 +159,7 @@ $$
 
 So 
 $$
-u ^ {n + 1} = A_2 ^ {-1} A_1 u ^{n}
+u ^ {n + 1} = A_1 ^ {-1} A_2 u ^{n}
 $$
 This is also unconditionally stable and more precise, but the time complexity is higher.
 
@@ -174,14 +179,14 @@ Similarly, we can solve with different strategies
 ### Explicit Method
 In the explicit method, we approximate the time derivative using a forward difference and the spatial derivatives using central differences.
 $$
-\frac{\partial u}{\partial t} \approx \frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t}
+\frac{\partial u}{\partial t} = \frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t}
 $$
 and the second-order spatial derivatives:
 $$
-\frac{\partial^2 u}{\partial x^2} \approx \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2}
+\frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2}
 $$
 $$
-\frac{\partial^2 u}{\partial y^2} \approx \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2}
+\frac{\partial^2 u}{\partial y^2} = \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2}
 $$
 
 Thus, the heat equation becomes:
@@ -214,18 +219,21 @@ $$
 u_{i,j}^n = u_{i,j}^{n+1} - r_x (u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}) - r_y (u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1})
 $$
 
+We can solve this linear system by mapping a 2D pair of indicies, $ i, j $, into one index, $ jN_{x} + i $, where each row only have 5 non-zero elements: one diagonal element and four neighbours. The size of new matrix is $ N_{x} N_{y} $.
+
 This results in a sparse system of linear equations that can be solved at each time step. The implicit method is **unconditionally stable**. However, solving this linear system is computationally expensive than explicit method.
 
 ### Crank-Nicolson Method
 We have
+
 $$
-\frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t} = \frac{k}{2} \left( \left[ \frac{u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}}{(\Delta x)^2} + \frac{u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1}}{(\Delta y)^2} \right] \right.
-$$
-$$
-+ \left[ \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2} + \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2} \right] \right)
+\begin{aligned}
+\frac{u_{i,j}^{n+1} - u_{i,j}^n}{\Delta t} = \frac{k}{2} \Bigg( &\frac{u_{i+1,j}^{n+1} - 2 u_{i,j}^{n+1} + u_{i-1,j}^{n+1}}{(\Delta x)^2} + \frac{u_{i,j+1}^{n+1} - 2 u_{i,j}^{n+1} + u_{i,j-1}^{n+1}}{(\Delta y)^2} \\
+&+ \frac{u_{i+1,j}^n - 2 u_{i,j}^n + u_{i-1,j}^n}{(\Delta x)^2} + \frac{u_{i,j+1}^n - 2 u_{i,j}^n + u_{i,j-1}^n}{(\Delta y)^2} \Bigg)
+\end{aligned}
 $$
 
-This can be written in matrix form:
+Similarly, we can also map this into a sparse matrix with size $ N_{x} N_{y} $ This can be written in matrix form:
 $$
 A_1 u^{n+1} = A_2 u^n
 $$

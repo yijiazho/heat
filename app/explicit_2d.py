@@ -11,7 +11,6 @@ y_size = int(Constants.LENGTH_Y / Constants.DY)
 y_vec = np.linspace(0, Constants.LENGTH, y_size)
 t_size = int(Constants.TOTAL_TIME/ Constants.DT)
 t_vec = np.linspace(0, Constants.TOTAL_TIME, t_size)
-t_size = 3000
 
 u = np.zeros([t_size, x_size, y_size])
 r_x = Constants.K * Constants.DT / (Constants.DX * Constants.DX)
@@ -44,6 +43,7 @@ if r_x + r_y <= 0.5:
             u[t + 1, x, -1] = u[t + 1, x, -2]
 
     # visualization
+    Visualization.static_heatmap(u, x_vec, y_vec, 100, Constants.DT, precision=4, file_name="app/plot/explicit_2d")
     Visualization.dynamic_heatmap(u, x_vec, y_vec, t_vec, Constants.DT, precision=4)
     
-print(123)
+# Time complexity O(t_size * x_size * y_size)

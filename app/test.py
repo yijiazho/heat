@@ -14,3 +14,9 @@ print(MatrixUtils.matrix_multiply(A, B))
 inverse = MatrixUtils.matrix_inverse(A)
 print(inverse)
 print(MatrixUtils.matrix_multiply(A, inverse))
+
+a = np.array([[1, 2], [3, 5]])
+b = np.array([1, 2])
+x = np.linalg.solve(a, b)
+
+print(x)
