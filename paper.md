@@ -127,6 +127,9 @@ In this paper, I presented and compared three numerical methods for solving the 
 ## References
 [1]Courant, R.; Friedrichs, K.; Lewy, H., "On the partial difference equations of mathematical physics", *IBM Journal of Research and Development*, 11 (2): 215–234.
 
-[1] J. Crank and P. Nicolson, "A practical method for numerical evaluation of solutions of partial differential equations of the heat-conduction type," *Mathematical Proceedings of the Cambridge Philosophical Society*, vol. 43, no. 1, pp. 50-67, 1947.
+[2] Snehashish Chakraverty; Nisha Mahato; Perumandla Karunakar; Tharasi Dilleswar Rao, "Finite Difference Method," in *Advanced Numerical and Semi-Analytical Methods for Differential Equations* , Wiley, 2019, pp.53-62.
 
-[2] J.D. Hoffman, "Numerical Methods for Engineers and Scientists," 2nd ed., McGraw-Hill, 2001.
+[3] Jesse R. Phagan, "Applied Mathematics," 4th ed., *Goodheart-Willcox*, 2010.
+
+[4] D. -X. Zhao and J. -M. Wang, "Exponential stability of a coupled Heat-ODE system," *2013 25th Chinese Control and Decision Conference (CCDC)*, Guiyang, China, 2013, pp. 169-172.
+
