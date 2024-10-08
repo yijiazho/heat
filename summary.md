@@ -237,7 +237,7 @@ Similarly, we can also map this into a sparse matrix with size $ N_{x} N_{y} $ T
 $$
 A_1 u^{n+1} = A_2 u^n
 $$
-This system is more accurate and unconditionally stable. However, it's even more **unconditionally stable** than the implicit method.
+This system is more accurate and unconditionally stable. However, it's even more **computational expensive** than the implicit method.
 
 ### Summary of 2-D Methods
 - **Explicit Method**: Simple but conditionally stable, requiring small time steps to maintain stability.

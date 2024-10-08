@@ -30,8 +30,8 @@ if r <= 0.5:
         for x in range(1, len(x_vec) - 1):
             u[t + 1, x] = r * (u[t, x + 1] - 2 * u[t, x] + u[t, x - 1]) + u[t, x]
 
-time_points = np.linspace(0, 0.015, 6)
-Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, 3, file_name="app/plot/explicit_1d")
+time_points = np.linspace(0, 50, 6)
+Visualization.plot_by_time(u, x_vec, Constants.DT, time_points, 0, file_name="app/plot/explicit_1d")
 
 y_min = np.min(u)
 y_max = np.max(u)

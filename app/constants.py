@@ -1,18 +1,18 @@
 class Constants:
-    # Thermal conductivity, in W / (m K)
-    # air = 0.026
-    # water = 0.592
-    # concrete = 0.92
-    # copper = 384.1
-    # aluminum alloy = 126.4
-    # iron = 80
-    K = 80
+    # Thermal diffusivity, in m^2 / s
+    # air = 2.6 e-8
+    # water = 5.92 e-7
+    # concrete = 9.2 e -7
+    # copper = 3.84 e-4
+    # aluminum alloy = 1.26 e-4
+    # iron = 8 e-5
+    K = 1.26e-4
     
-    LENGTH = 2
-    LENGTH_Y = 2
+    LENGTH = .2
+    LENGTH_Y = .2
     TEMP_LEFT = 200
     TEMP_RIGHT = 200
-    TOTAL_TIME = 0.5
-    DX = .1
-    DY = .1
-    DT = .00001
+    TOTAL_TIME = 60
+    DX = .005
+    DY = .005
+    DT = .01

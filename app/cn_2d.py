@@ -70,8 +70,9 @@ for t in range(1, t_size):
     u[t, 0, :] = Constants.TEMP_LEFT
     u[t, -1, :] = Constants.TEMP_RIGHT
     u[t, :, 0] = Constants.TEMP_LEFT
+    u[t, :, -1] = u[t, :, -2]
 
 # visualization
-Visualization.static_heatmap(u, x_vec, y_vec, 100, Constants.DT, precision=4, file_name="app/plot/cn_2d")
-Visualization.dynamic_heatmap(u, x_vec, y_vec, t_vec, Constants.DT, precision=4)
+Visualization.static_heatmap(u, x_vec, y_vec, 500, Constants.DT, precision=1, file_name="app/plot/cn_2d")
+Visualization.dynamic_heatmap(u, x_vec, y_vec, t_vec, Constants.DT, precision=1)
 # Time complexity O(t_size * (x_size * y_size)^ 1.5) because the sparse matrix solver is O(N ^ {3/2})
