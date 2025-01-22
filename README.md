@@ -11,10 +11,12 @@ source venv/bin/activate  # Linux/macOS
 .\venv\Scripts\activate   # Windows
 ```
 
-### Install requirements
+### Install and update requirements
 ```
 pip install -r requirements.txt
+pip freeze > requirements.txt
 ```
+
 
 ### Run application
 ```

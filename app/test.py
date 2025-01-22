@@ -1,6 +1,7 @@
 import numpy as np
 
 from utility.matrix import MatrixUtils
+from scipy import optimize
 
 
 A = np.array([[1, 2], [3, 4]])
@@ -20,3 +21,10 @@ b = np.array([1, 2])
 x = np.linalg.solve(a, b)
 
 print(x)
+
+def f(x):
+    return 2 * x**2 + 5 * x - 6
+
+minimizer = optimize.golden(f, brack=(-10, 10))
+print(minimizer)
+print(f(minimizer))
