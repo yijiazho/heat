@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from constants import Constants
-from utility.visulization import Visualization
 from utility.thomas import ThomasAlgorithm
 from utility.golden import GoldenSection
 
@@ -61,8 +60,8 @@ def compute_loss(dt, dx, k, total_time, length, temp_left, temp_right, analytica
     """
     x_size = int(length / dx)
     t_size = int(total_time / dt)
-    x_vec = np.linspace(0, length, x_size)
-    t_vec = np.linspace(0, total_time, t_size)
+    # x_vec = np.linspace(0, length, x_size)
+    # t_vec = np.linspace(0, total_time, t_size)
     r = k * dt / (dx * dx)
     f = np.full(x_size, 1 + 2 * r)
     g = np.full(x_size - 1, -r)
@@ -106,43 +105,47 @@ def loss_function(dt):
     
 # Define time steps for visualization
 lower = 0.001
-upper = 0.01
+upper = 0.1
 start = np.log10(lower)
 end = np.log10(upper)
 
-# time_steps_log = np.logspace(start, end, 10)
-# time_steps = np.linspace(lower, upper, 10)
+# Plot
 
-# losses = []
-# for dt in time_steps:
-#     try:
-#         loss = compute_loss(
-#             dt=dt,
-#             dx=Constants.DX,
-#             k=Constants.K,
-#             total_time=Constants.TOTAL_TIME,
-#             length=Constants.LENGTH,
-#             temp_left=Constants.TEMP_LEFT,
-#             temp_right=Constants.TEMP_RIGHT,
-#             analytical_func=heat_equation_analytical
-#         )
-#         losses.append(loss)
-#     except ValueError as e:
-#         print(e)
-#         losses.append(np.nan)
+time_steps_log = np.logspace(start, end, 20)
+time_steps = np.linspace(lower, upper, 10)
 
-# # Plot loss vs. time step
-# plt.figure()
-# plt.plot(time_steps, losses, marker='o', label='Loss')
-# plt.xlabel("Time Step (dt)")
-# plt.ylabel("Loss")
-# plt.title("Loss vs. Time Step")
-# plt.grid()
-# plt.legend()
-# plt.savefig("app/plot/loss_function", dpi=300, bbox_inches='tight')
-# plt.show()
+losses = []
+for dt in time_steps_log:
+    try:
+        loss = compute_loss(
+            dt=dt,
+            dx=Constants.DX,
+            k=Constants.K,
+            total_time=Constants.TOTAL_TIME,
+            length=Constants.LENGTH,
+            temp_left=Constants.TEMP_LEFT,
+            temp_right=Constants.TEMP_RIGHT,
+            analytical_func=heat_equation_analytical
+        )
+        losses.append(loss)
+    except ValueError as e:
+        print(e)
+        losses.append(np.nan)
 
+# Plot loss vs. time step
+plt.figure()
+plt.plot(time_steps_log, losses, marker='o', label='Loss')
+plt.xlabel("Time Step (dt)")
+plt.ylabel("Loss")
+plt.title("Loss vs. Time Step")
+plt.grid()
+plt.legend()
+plt.savefig("app/plot/loss_function_log_2", dpi=300, bbox_inches='tight')
+plt.show()
+
+# Optimize
 
 optimal_dt = GoldenSection.golden_section_search(loss_function, lower, upper)
 
 print(optimal_dt)
+# 0.00526979712198707
