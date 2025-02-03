@@ -28,3 +28,5 @@ def f(x):
 minimizer = optimize.golden(f, brack=(-10, 10))
 print(minimizer)
 print(f(minimizer))
+
+print(np.linspace(0.001, 0.1, 10))

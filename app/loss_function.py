@@ -105,7 +105,7 @@ def loss_function(dt):
     
 # Define time steps for visualization
 lower = 0.001
-upper = 0.1
+upper = 0.01
 start = np.log10(lower)
 end = np.log10(upper)
 
